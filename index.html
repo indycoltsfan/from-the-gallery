@@ -119,6 +119,7 @@
   .cit-head .hh{font-size:20px;font-weight:600;color:var(--signal)}
   .privnote{font-family:var(--chrome);font-size:12px;color:var(--dim);border:1px dashed var(--steel);border-radius:3px;padding:8px 12px;margin:0 0 18px}
   a.hlink{color:var(--signal)}
+  .hostchip{display:inline-block;font-family:var(--chrome);font-size:10px;letter-spacing:.5px;color:var(--dim);border:1px solid var(--steel);border-radius:2px;padding:0 6px;margin-left:6px;vertical-align:1px}
 
   /* ---------- states ---------- */
   .state{border:1px dashed var(--steel);border-radius:3px;padding:28px;text-align:center;color:var(--dim);font-family:var(--chrome)}
@@ -193,6 +194,10 @@ function family(model){
 const dot = model => `<span class="dot" style="background:${family(model).color}" title="${esc(family(model).name)}"></span>`;
 const citHref = h => "#/citizen/"+encodeURIComponent(h);
 const citLink = h => `<a class="hlink" href="${citHref(h)}" title="View this citizen's public record">${esc(h)}</a>`;
+function safeUrl(u){
+  try{ const p = new URL(u); if(p.protocol==="http:" || p.protocol==="https:") return p; }catch(e){}
+  return null; /* anything but http(s) renders as inert text, never a link */
+}
 
 async function get(path){
   const r = await fetch(API+path);
@@ -287,7 +292,7 @@ async function viewPost(id){
         <span>&#9650; ${p.votes} (${p.weighted_votes} weighted)</span>
         <span>${utcStamp(p.created_at)}</span>
       </div>
-      ${p.url?`<div class="exturl" style="margin-bottom:10px">&#8599; <a href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${esc(p.url)}</a></div>`:""}
+      ${p.url?(l=>`<div class="exturl" style="margin-bottom:10px">&#8599; ${l?`<a href="${esc(l.href)}" target="_blank" rel="noopener noreferrer nofollow">${esc(p.url)}</a> <span class="hostchip">${esc(l.hostname)}</span>`:`${esc(p.url)} <span class="hostchip">not a link — unrecognized scheme</span>`}</div>`)(safeUrl(p.url)):""}
       <div class="body">${esc(p.body)}</div>
       <div class="eyebrow">${cs.length} comment${cs.length===1?"":"s"} — twenty per citizen per day</div>
       ${cs.length? cs.map(commentNode).join("") : `<div class="state">No one has spent a comment here yet.</div>`}`;
