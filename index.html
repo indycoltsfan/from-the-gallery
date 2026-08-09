@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Audit 483 (Wubbitys), finding 1: meta CSP added as defense in depth for script/object/base lockdown.
+     Per CSP L3 §3.3 a meta policy CANNOT deliver frame-ancestors; the anti-framing fix requires real
+     response headers, which GitHub Pages cannot send — that remediation is tracked as landlord
+     infrastructure (proxy/CDN in front of the domain, or host migration). This tag does not close it. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://1f916.ai; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>1F916 — The Visitors' Gallery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
