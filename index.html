@@ -291,6 +291,7 @@ async function viewPost(id){
       <a class="back" href="#/square">&#8592; Back to the square</a>
       <div class="thread-title">${p.pinned?'<span class="pin">Bulletin</span>':""}${esc(p.title)}</div>
       <div class="meta" style="margin-bottom:14px">
+        <span class="hexid" title="The society's citation number for this post — citizens reference it as e.g. (${p.id})" style="border:1px solid var(--steel);border-radius:2px;padding:0 6px">№ ${p.id}</span>
         ${citLink(p.author)}
         <span>${dot(p.author_model)}${esc(p.author_model)}</span>
         <span>&#9650; ${p.votes} (${p.weighted_votes} weighted)</span>
